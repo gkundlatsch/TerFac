@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TerFac - Terminator Factory</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="number"], button {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: #45A049;
+    }
+    .note {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 5px;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 0.8em;
+      color: #666;
+    }
+    #advanced-options {
+      display: none;
+      margin-top: 1em;
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading-overlay" style="
+       display: none;
+       position: fixed;
+       top: 0; left: 0;
+       width: 100%; height: 100%;
+       background: rgba(255,255,255,0.9);
+       z-index: 9999;
+       text-align: center;
+       padding-top: 40vh;
+       font-size: 1.2em;
+       color: #333;
+  ">
+    The terminator is being generated.<br>
+    It’s a good time to grab a coffee, as this may take a few minutes.
+  </div>
+  
+  <h1>TerFac - Terminator Factory</h1>
+  <h2>Machine learning-driven generation of rho-independent terminators</h2>
+  
+  <form method="post" action="/">
+    <div class="form-group">
+      <label for="target_strength">Target Strength:</label>
+      <input
+        type="number"
+        id="target_strength"
+        name="target_strength"
+        step="any"
+        required
+        placeholder="e.g., 40"
+      >
+    <div class="note">
+    Select a value between 1 and 300. All terminatores above 40 are considered strong.
+    </div>
+    </div>
+
+    <div class="form-group">
+      <button type="button" id="toggle-advanced">Show advanced options</button>
+    </div>
+
+    <div id="advanced-options">
+      <div class="form-group">
+        <label for="max_hp">Maximum Hairpin Stem Length:</label>
+        <input
+          type="number"
+          id="max_hp"
+          name="max_hp"
+          min="6"
+          max="48"
+          step="2"
+          placeholder="48"
+        >
+    <div class="note">
+    The default value is 48. If your application requires a shorter terminator, choose an even number between 6 and 48. You may need to increase the Acceptable Deviation, particularly when targeting high strength with a low maximum length.
+    </div>
+      </div>
+
+      <div class="form-group">
+        <label for="desired_threshold">Acceptable Deviation (±):</label>
+        <input
+          type="number"
+          id="desired_threshold"
+          name="desired_threshold"
+          step="any"
+          placeholder="0.2"
+        >
+        <div class="note">
+        The default value is 0.2. Increasing it can improve optimization speed, but may also increase the deviation from your target strength.
+        </div>
+      </div>
+      
+
+      <div class="form-group">
+        <label for="hairpin_tol">Hairpin Entropy Tolerance (±):</label>
+        <input
+          type="number"
+          id="hairpin_tol"
+          name="hairpin_tol"
+          step="any"
+          placeholder="0.05"
+        >
+        <div class="note">
+          The default value is 0.05. This sets how much the hairpin’s Shannon entropy can deviate from the model’s ideal value. Lowering it increases the chance of generating a terminator within the Acceptable Deviation but slows processing. Increasing it speeds up processing but may result in a strength further from the target.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="seed">Random Seed:</label>
+        <input
+          type="number"
+          id="seed"
+          name="seed"
+          placeholder="1"
+        >
+        <div class="note">
+        The default value is 1. To generate multiple terminators with the same strength, modify the seed number while keeping all other parameters unchanged.
+      </div>
+    </div>
+  </div>
+
+    <div class="form-group">
+      <button type="submit">Run</button>
+    </div>
+  </form>
+
+  <div class="footer">
+    <p>Developed by MSc. Guilherme E. Kundlatsch under supervision of Prof. Danielle B. Pedrolli, Prof. Elibio Leopoldo Rech Filho, and Prof. Leonardo Tomazeli Duarte.</p>
+    <p>Model trained on data from: Chen, Y.J., Liu, P., Nielsen, A., et al. (2013). Nature Methods, 10, 659–664.</p>
+    <p>This work was funded by the São Paulo State Foundation (FAPESP) grants 2023/02133-0 and 2020/09838-0, the National Council for Scientific and Technological Development (CNPq) grants 305324/2023-3 and 405953/2024-0, and the National Institute of Science and Technology – Synthetic Biology (CNPq/FAP-DF) grant 465603/2014-9.</p>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggle-advanced');
+    const advSection = document.getElementById('advanced-options');
+    let shown = false;
+    toggleBtn.addEventListener('click', () => {
+      shown = !shown;
+      advSection.style.display = shown ? 'block' : 'none';
+      toggleBtn.textContent = shown
+        ? 'Hide advanced options'
+        : 'Show advanced options';
+    });
+
+    document.querySelector('form').addEventListener('submit', function() {
+    document.getElementById('loading-overlay').style.display = 'block';
+  });
+  </script>
+</body>
+</html>
+
