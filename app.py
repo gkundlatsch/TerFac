@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from tasks import enqueue_optimize
 from redis import Redis
 from rq import Queue
+import os
 
 app = Flask(__name__)
 
@@ -42,7 +43,7 @@ def home():
 @app.route("/status/<job_id>")
 def job_status(job_id):
     # 1) Connect to Redis (same URL you used in tasks.py)
-    redis_url = app.config.get("REDIS_URL", "redis://localhost:6379")
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
     redis_conn = Redis.from_url(redis_url)
     q = Queue("default", connection=redis_conn)
 
