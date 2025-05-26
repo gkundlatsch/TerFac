@@ -15,26 +15,6 @@ import os
 progress_messages = []
 _original_print = builtins.print
 
-# ==== DEBUG START ====
-print(f"[DEBUG] Python cwd       = {os.getcwd()}")
-here = os.path.dirname(__file__)
-print(f"[DEBUG] Module directory = {here}")
-print(f"[DEBUG] Files in module  = {os.listdir(here)}")
-
-print(
-    "[DEBUG] Versions:",
-    f"joblib={joblib.__version__}",
-    f"numpy={np.__version__}",
-    f"scipy={scipy.__version__}",
-    f"sklearn={sklearn.__version__}",
-    f"xgboost={xgboost.__version__}"
-)
-
-model_path = os.path.join(here, "terminator_strength_predictor.joblib")
-print(f"[DEBUG] Model path       = {model_path}")
-print(f"[DEBUG] Model exists?    = {os.path.exists(model_path)}")
-# ==== DEBUG END ====
-
 #########################
 # Global Constants & Model Loading
 #########################
@@ -893,6 +873,15 @@ def main():
     global loop_keys, a_keys, u_keys, h_keys
     global target_strength, desired_threshold, best_so_far
 
+    here = os.path.dirname(__file__)
+    model_path = os.path.join(here, "terminator_strength_predictor.joblib")
+
+    # Load the model right before we need it
+    here = os.path.dirname(__file__)
+    model_path = os.path.join(here, "terminator_strength_predictor.joblib")
+    model_data = joblib.load(model_path)
+    model = model_data["model"]
+    
     # Load mapping databases.
     atract_mapping, _ = load_atract_mapping()
     print("A-tract mapping loaded successfully.")
