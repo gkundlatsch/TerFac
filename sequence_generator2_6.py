@@ -11,6 +11,9 @@ import sklearn
 import xgboost
 import os
 
+# Added this line to silence the "X does not have valid feature names, but MLPRegressor was fitted with feature names" message
+warnings.filterwarnings("ignore")
+
 # A global list to accumulate all progress messages
 progress_messages = []
 _original_print = builtins.print
