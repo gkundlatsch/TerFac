@@ -6,7 +6,9 @@ from scipy.optimize import differential_evolution
 import itertools
 import warnings
 import builtins
-import os
+import scipy
+import sklearn
+import xgboost
 
 # A global list to accumulate all progress messages
 progress_messages = []
