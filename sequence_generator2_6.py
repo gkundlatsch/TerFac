@@ -9,6 +9,7 @@ import builtins
 import scipy
 import sklearn
 import xgboost
+import os
 
 # A global list to accumulate all progress messages
 progress_messages = []
