@@ -5,8 +5,8 @@ import numpy as np
 from scipy.optimize import differential_evolution
 import itertools
 import warnings
-warnings.filterwarnings("ignore")  # Nuclear option: suppresses ALL warnings
 import builtins
+import os
 
 # A global list to accumulate all progress messages
 progress_messages = []
@@ -35,8 +35,13 @@ desired_order = [
     "GC_Inicial_Hairpin"
 ]
 
-# Load the predictor model from disk.
-model_data = joblib.load("terminator_strength_predictor.joblib")
+here = os.path.dirname(__file__)
+print(f"[DEBUG] CWD:          {os.getcwd()}")
+print(f"[DEBUG] module folder: {here}")
+print(f"[DEBUG] files there:   {os.listdir(here)}")
+model_path = os.path.join(here, "terminator_strength_predictor.joblib")
+print(f"[DEBUG] loading from:  {model_path} (exists? {os.path.exists(model_path)})")
+model_data = joblib.load(model_path)
 model = model_data["model"]
 print("Final feature order defined and model loaded successfully!")
 
