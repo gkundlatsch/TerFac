@@ -12,6 +12,26 @@ import os
 progress_messages = []
 _original_print = builtins.print
 
+# ==== DEBUG START ====
+print(f"[DEBUG] Python cwd       = {os.getcwd()}")
+here = os.path.dirname(__file__)
+print(f"[DEBUG] Module directory = {here}")
+print(f"[DEBUG] Files in module  = {os.listdir(here)}")
+
+print(
+    "[DEBUG] Versions:",
+    f"joblib={joblib.__version__}",
+    f"numpy={np.__version__}",
+    f"scipy={scipy.__version__}",
+    f"sklearn={sklearn.__version__}",
+    f"xgboost={xgboost.__version__}"
+)
+
+model_path = os.path.join(here, "terminator_strength_predictor.joblib")
+print(f"[DEBUG] Model path       = {model_path}")
+print(f"[DEBUG] Model exists?    = {os.path.exists(model_path)}")
+# ==== DEBUG END ====
+
 #########################
 # Global Constants & Model Loading
 #########################
