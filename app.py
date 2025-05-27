@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from tasks import enqueue_optimize
 from redis import Redis
 from rq import Queue
-from rq.registry import QueuedJobRegistry
 import os
 
 app = Flask(__name__)
@@ -41,6 +40,8 @@ def home():
     # GET → show the form
     return render_template("index.html")
 
+app = Flask(__name__)
+
 @app.route("/status/<job_id>")
 def job_status(job_id):
     # 1) Connect to Redis
@@ -53,7 +54,7 @@ def job_status(job_id):
     if job is None:
         return f"Unknown job ID: {job_id}", 404
 
-    # 3) If finished, unpack results and render your results page
+    # 3) If finished, render results
     if job.is_finished:
         predicted, features, sequences, logs = job.result
         return render_template(
@@ -64,12 +65,11 @@ def job_status(job_id):
             logs=logs,
         )
 
-    # 4) Otherwise, compute queue position if still queued
-    status = job.get_status()  # "queued", "started", etc.
+    # 4) Otherwise, compute queue position
+    status = job.get_status()     # status values documented here :contentReference[oaicite:11]{index=11}
     position = None
     if status == "queued":
-        registry = QueuedJobRegistry(queue=q)
-        waiting_ids = registry.get_job_ids()
+        waiting_ids = q.job_ids    # queued IDs stored in the Redis list :contentReference[oaicite:12]{index=12}
         if job_id in waiting_ids:
             position = waiting_ids.index(job_id) + 1
 
