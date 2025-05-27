@@ -65,6 +65,11 @@
     <div class="card">
       <h2>Job {{ job_id }} Status</h2>
       <p style="font-size:1.2em;"><strong>{{ status|capitalize }}</strong></p>
+      
+      {% if position %}
+      <p>You are currently <strong>#{{ position }}</strong> in the queue.</p>
+      {% endif %}
+
       <div id="spinner">⏳</div>
       <p>Please wait while we process your request…</p>
       <a href="{{ url_for('home') }}" class="button">Cancel & Go Home</a>
