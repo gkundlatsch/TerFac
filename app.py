@@ -43,7 +43,7 @@ def home():
 
 @app.route("/status/<job_id>")
 def job_status(job_id):
-    # 1) Connect to Redis (same URL you used in tasks.py)
+    # 1) Connect to Redis
     redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
     redis_conn = Redis.from_url(redis_url)
     q = Queue("default", connection=redis_conn)
@@ -64,23 +64,21 @@ def job_status(job_id):
             logs=logs,
         )
 
-     # 4) Otherwise, compute queue position if still queued
-     status = job.get_status()  # "queued", "started", etc.
-     position = None
-     if status == "queued":
-         # Look at the IDs still waiting in the default queue
-         registry = QueuedJobRegistry(queue=q)
-         waiting_ids = registry.get_job_ids()
-         if job_id in waiting_ids:
-             # 1-based position
-             position = waiting_ids.index(job_id) + 1
+    # 4) Otherwise, compute queue position if still queued
+    status = job.get_status()  # "queued", "started", etc.
+    position = None
+    if status == "queued":
+        registry = QueuedJobRegistry(queue=q)
+        waiting_ids = registry.get_job_ids()
+        if job_id in waiting_ids:
+            position = waiting_ids.index(job_id) + 1
 
-     return render_template(
-         "status.html",
-         job_id=job_id,
-         status=status,
-         position=position,
-     )
+    return render_template(
+        "status.html",
+        job_id=job_id,
+        status=status,
+        position=position,
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
