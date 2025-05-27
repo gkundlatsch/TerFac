@@ -65,16 +65,15 @@
     <div class="card">
       <h2>Job {{ job_id }} Status</h2>
       <p style="font-size:1.2em;"><strong>{{ status|capitalize }}</strong></p>
-      
-      {% if position %}
+      {% if status == "queued" %}
       <p>You are currently <strong>#{{ position }}</strong> in the queue.</p>
+      {% elif status == "started" %}
+      <p>Your job is now <strong>running</strong>…</p>
       {% endif %}
-
       <div id="spinner">⏳</div>
       <p>Please wait while we process your request…</p>
-      <a href="{{ url_for('home') }}" class="button">Cancel & Go Home</a>
+      <a href="{{ url_for('cancel_job', job_id=job_id) }}" class="button">Cancel &amp; Go Home</a>
     </div>
-
     <div class="footer">
       <p>Developed by Guilherme E. Kundlatsch under supervision of Prof. Danielle B. Pedrolli, Prof. Elibio Leopoldo Rech Filho and Prof. Leonardo Tomazeli Duarte.</p>
     </div>
