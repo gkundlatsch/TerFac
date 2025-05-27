@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from tasks import enqueue_optimize
 from redis import Redis
 from rq import Queue
+from rq.registry import QueuedJobRegistry
 import os
 
 app = Flask(__name__)
@@ -63,12 +64,23 @@ def job_status(job_id):
             logs=logs,
         )
 
-    # 4) Otherwise, show a status page (we’ll create this template next)
-    return render_template(
-        "status.html",
-        job_id=job_id,
-        status=job.get_status(),  # e.g. "queued" or "started"
-    )
+     # 4) Otherwise, compute queue position if still queued
+     status = job.get_status()  # "queued", "started", etc.
+     position = None
+     if status == "queued":
+         # Look at the IDs still waiting in the default queue
+         registry = QueuedJobRegistry(queue=q)
+         waiting_ids = registry.get_job_ids()
+         if job_id in waiting_ids:
+             # 1-based position
+             position = waiting_ids.index(job_id) + 1
+
+     return render_template(
+         "status.html",
+         job_id=job_id,
+         status=status,
+         position=position,
+     )
 
 if __name__ == "__main__":
     app.run(debug=True)
