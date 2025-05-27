@@ -40,8 +40,6 @@ def home():
     # GET → show the form
     return render_template("index.html")
 
-app = Flask(__name__)
-
 @app.route("/status/<job_id>")
 def job_status(job_id):
     # 1) Connect to Redis
@@ -66,10 +64,10 @@ def job_status(job_id):
         )
 
     # 4) Otherwise, compute queue position
-    status = job.get_status()     # status values documented here :contentReference[oaicite:11]{index=11}
+    status = job.get_status()     
     position = None
     if status == "queued":
-        waiting_ids = q.job_ids    # queued IDs stored in the Redis list :contentReference[oaicite:12]{index=12}
+        waiting_ids = q.job_ids    
         if job_id in waiting_ids:
             position = waiting_ids.index(job_id) + 1
 
