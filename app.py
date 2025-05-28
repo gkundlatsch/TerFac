@@ -52,32 +52,38 @@ def job_status(job_id):
     if job is None:
         return f"Unknown job ID: {job_id}", 404
 
-    # 3) If finished, render results
+    # 3) Always load live logs from metadata (may be empty)
+    logs = job.meta.get("logs", [])
+
+    # 4) If finished, unpack the *result* logs instead
     if job.is_finished:
-        predicted, features, sequences, logs = job.result
+        predicted, features, sequences, result_logs = job.result
         return render_template(
             "results.html",
             predicted=predicted,
             features=features,
             sequences=sequences,
-            logs=logs,
+            logs=result_logs,   # use the logs returned with result
         )
 
-    # 4) Otherwise, compute queue position
-    status = job.get_status()     
+    # 5) Otherwise, we’re still queued or running
+    status = job.get_status()  # "queued" or "started"
     position = None
     if status == "queued":
-        waiting_ids = q.job_ids    
+        # compute position in queue
+        waiting_ids = q.job_ids
         if job_id in waiting_ids:
             position = waiting_ids.index(job_id) + 1
 
+    # 6) Render the status page with the live logs
     return render_template(
         "status.html",
         job_id=job_id,
         status=status,
         position=position,
-        logs=logs,
+        logs=logs,  
     )
+
     
 @app.route("/cancel/<job_id>")
 def cancel_job(job_id):
