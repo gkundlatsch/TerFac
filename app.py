@@ -14,13 +14,13 @@ def home():
 
         # 2) Read optional advanced fields (with defaults)
         max_hp_raw = request.form.get("max_hp", "").strip()
-        max_hp = int(max_hp_raw) if max_hp_raw else 48
+        max_hp = int(max_hp_raw) if max_hp_raw else 24
 
         thresh_raw = request.form.get("desired_threshold", "").strip()
-        desired_threshold = float(thresh_raw) if thresh_raw else 0.2
+        desired_threshold = float(thresh_raw) if thresh_raw else 1
         
         tol_raw = request.form.get("hairpin_tol", "").strip()
-        hairpin_tol = float(tol_raw) if tol_raw else 0.05
+        hairpin_tol = float(tol_raw) if tol_raw else 0.1
 
         seed_raw = request.form.get("seed", "").strip()
         seed = int(seed_raw) if seed_raw else 1
