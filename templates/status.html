@@ -72,7 +72,9 @@
       {% endif %}
       <div id="spinner">⏳</div>
       <p>Please wait while we process your request…</p>
-      <a href="{{ url_for('home') }}" class="button">Cancel &amp; Go Home</a>
+      <a href="{{ url_for('cancel_job', job_id=job_id) }}" class="button">
+      Cancel &amp; Go Home
+      </a>
     </div>
     <div class="footer">
       <p>Developed by Guilherme E. Kundlatsch under supervision of Prof. Danielle B. Pedrolli, Prof. Elibio Leopoldo Rech Filho and Prof. Leonardo Tomazeli Duarte.</p>
