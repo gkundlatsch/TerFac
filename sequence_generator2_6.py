@@ -10,7 +10,6 @@ import scipy
 import sklearn
 import xgboost
 import os
-from rq import get_current_job
 
 # Added this line to silence the "X does not have valid feature names, but MLPRegressor was fitted with feature names" message
 warnings.filterwarnings("ignore")
@@ -1120,28 +1119,23 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
     import pandas as pd
     import numpy as np
     from scipy.optimize import differential_evolution
-    import builtins                                      
 
-    # Globals for mappings and feature-order
     global loop_mapping, atract_mapping, utract_mapping, hairpin_mapping
     global loop_keys, a_keys, u_keys, h_keys
     global max_hairpin_norm, desired_threshold, best_so_far, target_strength
-    # REMOVED: global progress_messages
+    global progress_messages
 
-    # --- Initialize logging into the RQ job metadata ---
-    job = get_current_job()                               
-    job.meta['logs'] = []                                 
-    job.save_meta()                                       
+    # Reset log
+    progress_messages.clear()
 
-    def log(msg: str):                                    
-        """Append a message to job.meta['logs'] and persist."""
-        logs = job.meta.get('logs', [])
-        logs.append(msg)
-        job.meta['logs'] = logs
-        job.save_meta()
+    # Monkey-patch print to capture into progress_messages
+    def _capturing_print(*args, **kwargs):
+        msg = " ".join(str(a) for a in args)
+        progress_messages.append(msg)
+        return _original_print(*args, **kwargs)
+    builtins.print = _capturing_print
 
     try:
-        log("1) Loading mappings & keys")                 
         # 1) Load mappings & sorted keys
         atract_mapping, _  = load_atract_mapping()
         utract_mapping, _  = load_utract_mapping()
@@ -1151,9 +1145,7 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
         a_keys    = sorted(atract_mapping.keys())
         u_keys    = sorted(utract_mapping.keys())
         h_keys    = sorted(hairpin_mapping.keys())
-        log(f"   ↳ loops={len(loop_keys)}, a-tracts={len(a_keys)}, u-tracts={len(u_keys)}, hairpins={len(h_keys)}")  # NEW
 
-        log("2) Setting run parameters")                  
         # 2) Set globals for this run
         target_strength   = target_strength_val
         max_hairpin_norm  = normalize_feat(max_hp_val, "Tamanho Hairpin sem Loop")
@@ -1162,13 +1154,6 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
 
         # 3) Run differential evolution
         bounds = [(0, 1)] * len(desired_order)
-
-        def callback_func(xk, convergence):              
-            cost = cost_function(xk, target_strength_val)
-            log(f"   ↳ evo step: cost={cost:.6f}, conv={convergence:.6f}")
-            return False
-
-        log("3) Starting differential evolution")        
         result = differential_evolution(
             cost_function,
             bounds,
@@ -1180,7 +1165,6 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
             seed=seed_val,
             callback=callback_func
         )
-        log(f"   ↳ evo done (success={result.success})") 
 
         # 4) Snap & predict from snapped vector
         optimal_vec = result.x if result.success else best_so_far["x"]
@@ -1188,9 +1172,8 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
             optimal_vec, loop_mapping, atract_mapping, utract_mapping, hairpin_mapping
         )
         predicted_strength = model.predict(snapped.reshape(1, -1))[0]
-        log(f"4) Initial prediction: {predicted_strength:.4f}")  
 
-        # 5) Denormalize & scale → df_final
+        # 5) Denormalize & scale → df_final (integer real-world features)
         df_norm   = pd.DataFrame([snapped], columns=desired_order)
         df_denorm = denormalize_dataframe(df_norm)
         df_scaled = calculate_final_values(df_denorm)
@@ -1200,14 +1183,11 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
             "%GC_Loop","A_Tract_state-change","U_Tract_state-change",
             "HP_S_Loop_state_change","GC_Inicial_Hairpin"
         ])
-        log("5) Denormalization & scaling complete")     
 
-        # 6) Build real-world feature dict
+        # 6) Build real-world feature dict from df_final
         real_feature_dict = df_final.iloc[0].to_dict()
 
         # 7) Generate each sequence part
-        log("6) Generating sequences")                   
-
         # --- A-tract ---
         a_row   = df_final.iloc[0]
         found_a = generate_a_tract_by_target(
@@ -1216,7 +1196,6 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
             int(a_row["C%_6_A_tract"]),
             int(a_row["A_Tract_state-change"])
         ) or ""
-        log(f"   ↳ A-tract: {found_a}")                  
 
         # --- U-tract ---
         u_row     = df_final.iloc[0]
@@ -1231,12 +1210,11 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
             progress_freq=1000000
         )
         found_u = found_u or ""
-        log(f"   ↳ U-tract: {found_u}")                  
 
-        # --- Hairpin halves ---
-        hp_row   = df_final.iloc[0]
-        half_len = int(hp_row["Tamanho Hairpin sem Loop"]) // 2
-        first_half, _ = generate_hairpin_first_half(
+        # --- Hairpin first & second half ---
+        hp_row     = df_final.iloc[0]
+        half_len   = int(hp_row["Tamanho Hairpin sem Loop"]) // 2
+        first_half, _   = generate_hairpin_first_half(
             half_len,
             float(hp_row["Entropia_HP_S_Loop"]),
             int(hp_row["HP_S_Loop_state_change"]),
@@ -1244,40 +1222,37 @@ def optimize_terminator(target_strength_val, max_hp_val, threshold_val, hairpin_
             entropy_tol=hairpin_tol_val,
             progress_freq=1000000
         )
-        first_half = first_half or ""
-        log(f"   ↳ Hairpin first half: {first_half}")    
+        first_half  = first_half or ""
         second_half = generate_second_half(first_half)
-        log(f"   ↳ Hairpin second half: {second_half}")   
 
         # --- Loop ---
         loop_seq = generate_loop_sequence_by_features(df_final) or ""
-        log(f"   ↳ Loop: {loop_seq}")                    
 
-        # Assemble terminator
+        # Assemble terminator in the correct order
         terminator = found_a + first_half + loop_seq + second_half + found_u
+
         sequences = {
-            "A-tract": found_a,
-            "Hairpin (first half)": first_half,
-            "Loop": loop_seq,
-            "Hairpin (second half)": second_half,
-            "U-tract": found_u,
-            "Full Terminator": terminator
+            "A-tract":                found_a,
+            "Hairpin (first half)":   first_half,
+            "Loop":                   loop_seq,
+            "Hairpin (second half)":  second_half,
+            "U-tract":                found_u,
+            "Full Terminator":        terminator
         }
-        log(f"7) Terminator assembled: {terminator}")    
 
         # 8) Re-extract & re-predict from the actual sequences
         full_hairpin_seq = first_half + second_half
         x_vec = extract_features(found_a, found_u, full_hairpin_seq, loop_seq)
         recomputed_strength = model.predict(x_vec.reshape(1, -1))[0]
+        # override to use this exact sequence-based prediction
         predicted_strength = recomputed_strength
-        log(f"8) Final predicted strength: {predicted_strength:.4f}")  
 
-        # CHANGED: return the live metadata logs instead of progress_messages
-        return predicted_strength, real_feature_dict, sequences, job.meta['logs']
+        # Return final strength, real-world features, sequences and the full log
+        return predicted_strength, real_feature_dict, sequences, list(progress_messages)
 
     finally:
-        # REMOVED: builtins.print = _original_print
-        pass  # now empty
+        # Always restore print()
+        builtins.print = _original_print
 
 if __name__ == "__main__":
     main()
