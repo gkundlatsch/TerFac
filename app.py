@@ -77,6 +77,23 @@ def job_status(job_id):
         status=status,
         position=position,
     )
+    
+@app.route("/cancel/<job_id>")
+def cancel_job(job_id):
+    """Remove a pending job from the queue, then send the user back home."""
+    # 1) Connect to Redis
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+    conn = Redis.from_url(redis_url)
+    q = Queue("default", connection=conn)
+
+    # 2) Fetch and delete the job if it’s still queued
+    job = q.fetch_job(job_id)
+    if job and job.get_status() == "queued":
+        job.cancel()  # unschedule if it was scheduled
+        job.delete()  # remove it from Redis entirely
+
+    # 3) Redirect back to the home page
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=True)
