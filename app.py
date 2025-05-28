@@ -76,7 +76,6 @@ def job_status(job_id):
         job_id=job_id,
         status=status,
         position=position,
-        logs=logs,
     )
     
 @app.route("/cancel/<job_id>")
