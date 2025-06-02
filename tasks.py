@@ -2,7 +2,7 @@
 from redis import Redis
 from rq import Queue
 import os
-from sequence_generator2_8 import optimize_terminator
+from sequence_generator2_6 import optimize_terminator
 
 # Connect with a high default for jobs enqueued without explicit timeout
 redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
@@ -17,6 +17,6 @@ def enqueue_optimize(*args, **kwargs):
         optimize_terminator,
         *args,
         **kwargs,
-        job_timeout=3600   # allow up to 3600 seconds (1 hour)
+        job_timeout=3600   # allow up to 3600 seconds (1 hour)6
     )
 
