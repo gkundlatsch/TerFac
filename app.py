@@ -62,7 +62,9 @@ def job_status(job_id):
             sequences=sequences,
             logs=logs,
         )
-
+    if job.is_failed:
+        return render_template("error.html"), 500
+   
     # 4) Otherwise, compute queue position
     status = job.get_status()     
     position = None
