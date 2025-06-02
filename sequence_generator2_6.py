@@ -6,9 +6,6 @@ from scipy.optimize import differential_evolution
 import itertools
 import warnings
 import builtins
-import scipy
-import sklearn
-import xgboost
 import os
 
 # Added this line to silence the "X does not have valid feature names, but MLPRegressor was fitted with feature names" message
@@ -108,7 +105,7 @@ def load_loop_mapping(file_path="Loop_feature_mapping_normalized.csv"):
         mapping.setdefault(loop_norm, []).append(gc_val)
     return mapping, df
 
-def load_hairpin_mapping(file_path="Hairpin_feature_mapping.csv"):
+def load_hairpin_mapping(file_path="Hairpin_feature_mapping_normalized.csv"):
     df = pd.read_csv(file_path)
     feature_cols = [
         "Tamanho Hairpin sem Loop",
@@ -155,7 +152,7 @@ def snap_to_valid_candidate(candidate, loop_mapping, atract_mapping, utract_mapp
       2:  C%_6_A_tract
       3:  U%_10_U_tract
       4:  U%_6_U_tract
-      5:  A%_6_A_tract   (for U-tract)
+      5:  A%_6_U_tract
       6:  C%_U_tract
       7:  Tamanho Hairpin sem Loop
       8:  %GC_Loop
@@ -690,12 +687,19 @@ def generate_hairpin_first_half(half_length, target_entropy, full_target_state_c
         total_possibilities *= len(group)
     print(f"Starting candidate generation. Total possibilities (restricted): {total_possibilities:,}")
     print("If this process is taking too long, consider reducing the maximum hairpin size.")
-    # --- Pre-filter compositions by overall entropy ---
-    valid_entropy_comps = {
-        comp
-        for comp in gen_compositions(half_length)
-        if abs(compute_entropy(comp, half_length) - target_entropy) <= entropy_tol
-    }
+    # --- Pre-filter compositions by full‐hairpin entropy ---
+    valid_entropy_comps = set()
+    for comp in gen_compositions(half_length):
+        # Build full‐hairpin counts by adding the complementary counts from the second half:
+        full_counts = (
+            comp[0] + comp[3],  # A_total = A_firstHalf + U_firstHalf (complement)
+            comp[1] + comp[2],  # C_total = C_firstHalf + G_firstHalf
+            comp[2] + comp[1],  # G_total = G_firstHalf + C_firstHalf
+            comp[3] + comp[0],  # U_total = U_firstHalf + A_firstHalf
+        )
+        full_length = half_length * 2
+        if abs(compute_entropy(full_counts, full_length) - target_entropy) <= entropy_tol:
+            valid_entropy_comps.add(comp)
 
     # --- Pre-filter compositions by overall state-change capability ---
     valid_state_comps = {
@@ -737,7 +741,14 @@ def generate_hairpin_first_half(half_length, target_entropy, full_target_state_c
         if initial_gc_count(candidate_list) != target_gc_initial:
             continue
         
-        if abs(compute_entropy(comp, half_length) - target_entropy) > entropy_tol:
+        full_counts = (
+            comp[0] + comp[3],
+            comp[1] + comp[2],
+            comp[2] + comp[1],
+            comp[3] + comp[0],
+        )
+        full_length = half_length * 2
+        if abs(compute_entropy(full_counts, full_length) - target_entropy) > entropy_tol:
             continue
         
         # Candidate passes all filters.
@@ -802,13 +813,20 @@ def extract_features(a_seq, u_seq, hairpin_seq, loop_seq):
     # --- Hairpin features ---
     half = len(hairpin_seq) // 2
     first_half = hairpin_seq[:half]
+    second_half = hairpin_seq[half:]
     feats["Tamanho Hairpin sem Loop"]   = half * 2
     feats["GC_Inicial_Hairpin"]         = initial_gc_count(first_half)
-    countsH = (first_half.count("A"), first_half.count("C"),
-               first_half.count("G"), first_half.count("U"))
-    feats["Entropia_HP_S_Loop"]         = shannon_entropy(countsH)
-    feats["HP_S_Loop_state_change"]     = state_change_count(list(first_half)) * 2 + 1
 
+    # Count nucleotides over the ENTIRE hairpin (both halves):
+    total_A = first_half.count("A") + second_half.count("A")
+    total_C = first_half.count("C") + second_half.count("C")
+    total_G = first_half.count("G") + second_half.count("G")
+    total_U = first_half.count("U") + second_half.count("U")
+    countsH_full = (total_A, total_C, total_G, total_U)
+
+    feats["Entropia_HP_S_Loop"]         = shannon_entropy(countsH_full)
+    feats["HP_S_Loop_state_change"]     = state_change_count(list(first_half)) * 2 + 1
+    
     # --- Build normalized feature vector ---
     feature_vector = []
     for name in desired_order:
@@ -847,9 +865,15 @@ def compare_seq_vs_expected(a_seq, u_seq, hairpin_seq, loop_seq, df_expected):
     first = hairpin_seq[:half]
     actual["Tamanho Hairpin sem Loop"] = half*2
     actual["GC_Inicial_Hairpin"]       = initial_gc_count(first)
-    cnts = (first.count("A"), first.count("C"), first.count("G"), first.count("U"))
-    actual["Entropia_HP_S_Loop"]      = shannon_entropy(cnts)
-    actual["HP_S_Loop_state_change"]  = state_change_count(list(first))*2 + 1
+    # Count nucleotides over the entire hairpin (both halves):
+    total_A = first.count("A") + second.count("A")
+    total_C = first.count("C") + second.count("C")
+    total_G = first.count("G") + second.count("G")
+    total_U = first.count("U") + second.count("U")
+    cnts_full = (total_A, total_C, total_G, total_U)
+
+    actual["Entropia_HP_S_Loop"]      = shannon_entropy(cnts_full)
+    actual["HP_S_Loop_state_change"]  = state_change_count(list(first)) * 2 + 1
 
     # pull expected (integer/float) values from df_expected
     exp = df_expected.iloc[0].to_dict()
@@ -875,16 +899,7 @@ def main():
     global loop_mapping, atract_mapping, utract_mapping, hairpin_mapping
     global loop_keys, a_keys, u_keys, h_keys
     global target_strength, desired_threshold, best_so_far
-
-    here = os.path.dirname(__file__)
-    model_path = os.path.join(here, "terminator_strength_predictor.joblib")
-
-    # Load the model right before we need it
-    here = os.path.dirname(__file__)
-    model_path = os.path.join(here, "terminator_strength_predictor.joblib")
-    model_data = joblib.load(model_path)
-    model = model_data["model"]
-    
+  
     # Load mapping databases.
     atract_mapping, _ = load_atract_mapping()
     print("A-tract mapping loaded successfully.")
