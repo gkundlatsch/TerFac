@@ -96,7 +96,7 @@
 
   <form method="post" action="/">
     <a href="{{ url_for('show_max_strength') }}" class="max-strength-box">
-      Click here to see the terminator with maximum strength for every hairpin length
+      Click here to see the strongest terminator for each hairpin length
     </a>
   
   
@@ -129,10 +129,10 @@
           min="6"
           max="48"
           step="2"
-          placeholder="48"
+          placeholder="24"
         >
     <div class="note">
-    The default value is 48. If your application requires a shorter terminator, choose an even number between 6 and 48. You may need to increase the Acceptable Deviation, particularly when targeting high strength with a low maximum length.
+    The default value is 24. If your application requires a shorter or longer terminator, choose an even number between 6 and 48. You may need to increase the Acceptable Deviation, particularly when targeting high strength with a low maximum length.
     </div>
       </div>
 
@@ -146,7 +146,7 @@
           placeholder="0.2"
         >
         <div class="note">
-        The default value is 0.2. Increasing it can improve optimization speed, but may also increase the deviation from your target strength.
+        The default value is 1. Increasing it can improve optimization speed but may also increase the deviation from your target strength. Avoid very low values, especially when generating very strong terminators.
         </div>
       </div>
       
@@ -158,10 +158,10 @@
           id="hairpin_tol"
           name="hairpin_tol"
           step="any"
-          placeholder="0.05"
+          placeholder="0.1"
         >
         <div class="note">
-          The default value is 0.05. This sets how much the hairpin’s Shannon entropy can deviate from the model’s ideal value. Lowering it increases the chance of generating a terminator within the Acceptable Deviation but slows processing. Increasing it speeds up processing but may result in a strength further from the target.
+          The default value is 0.1. This sets how much the hairpin’s Shannon entropy can deviate from the model’s ideal value. Lowering it increases the chance of generating a terminator within the Acceptable Deviation but slows processing. Increasing it speeds up processing but may result in a strength further from the target.
         </div>
       </div>
 
