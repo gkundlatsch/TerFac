@@ -34,7 +34,7 @@
         text-align: center;
       }
       #spinner {
-        font-size: 2em;
+        font-size: 3em;
         margin: 1em 0;
       }
       a.button {
@@ -49,6 +49,18 @@
       }
       a.button:hover {
         background-color: #45A049;
+      }
+      .links {
+        margin-top: 1.5em;
+        text-align: center;
+      }
+      .links a {
+        color: #4CAF50;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .links a:hover {
+        text-decoration: underline;
       }
       .footer {
         margin-top: 3em;
@@ -70,12 +82,20 @@
       {% elif status == "started" %}
       <p>Your job is now <strong>running</strong>…</p>
       {% endif %}
-      <div id="spinner">⏳</div>
-      <p>Please wait while we process your request…</p>
+
+      <div id="spinner">☕</div>
+      <p>The terminator is being generated. It’s a good time to grab a coffee, as this may take a few minutes.</p>
+
+      <div class="links">
+        <p>You can find a list of terminators with different lengths and maximum strength <a href="{{ url_for('show_max_strength') }}">here</a>.</p>
+        <p>Is this taking too long? Try downloading and using our <a href="https://github.com/gkundlatsch/TerFac-offline" target="_blank">offline version</a>.</p>
+      </div>
+
       <a href="{{ url_for('cancel_job', job_id=job_id) }}" class="button">
-      Cancel &amp; Go Home
+        Cancel &amp; Go Home
       </a>
     </div>
+
     <div class="footer">
       <p>Developed by Guilherme E. Kundlatsch under supervision of Prof. Danielle B. Pedrolli, Prof. Elibio Leopoldo Rech Filho and Prof. Leonardo Tomazeli Duarte.</p>
       <p>The data used to train this model was originally published by Chen et al. in Nature Methods: Chen, Y.J., Liu, P., Nielsen, A., et al. (2013). Characterization of 582 natural and synthetic terminators and quantification of their design constraints. Nature Methods, 10, 659–664.</p>
@@ -90,3 +110,4 @@
     </script>
   </body>
 </html>
+
