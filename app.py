@@ -97,5 +97,9 @@ def cancel_job(job_id):
     # 3) Redirect back to the home page
     return redirect(url_for("home"))
 
+@app.route("/max_strength")
+def show_max_strength():
+    return render_template("max_strength.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
