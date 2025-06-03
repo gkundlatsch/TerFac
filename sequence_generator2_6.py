@@ -476,8 +476,15 @@ def generate_u_tract_by_distribution(entropia_u, u_state_change, u10, u6, a6, c_
     valid_comps = valid_entropy_comps.intersection(valid_state_comps)
     print(f"U-tract pre-filtering: {len(valid_comps)} valid compositions by entropy and state-change.")
     
-
-
+    print(f"    half_length = {half_length}")
+    print(f"    needed full‐hairpin entropy    = {target_entropy:.4f}")
+    print(f"    needed full‐stem state‐changes = {full_target_state_changes}")
+    print(f"    needed GC_initial (first‐half) = {target_gc_initial}")
+    
+    print(f"  → {len(valid_entropy_comps)} compositions pass the full‐hairpin entropy test")
+    print(f"  → {len(valid_state_comps)} compositions pass the first‐half state‐change range test")
+    print(f"  → {len(valid_gc_comps)} compositions pass the “enough G+C in first‐half” test")
+    print(f"  → Intersection size = {len(valid_comps)}")
 
     # --- Now, for each valid composition, generate candidate orderings ---
     for comp in valid_comps:
@@ -1050,6 +1057,12 @@ def main():
         target_entropy = float(df_final["Entropia_HP_S_Loop"].iloc[0])
         target_state_changes = int(df_final["HP_S_Loop_state_change"].iloc[0])
         target_gc_initial = int(df_final["GC_Inicial_Hairpin"].iloc[0])
+        print(">>> About to call generate_hairpin_first_half with:")
+        print(f"    raw hairpin_length   = {hairpin_length}")
+        print(f"    half_length          = {half_length}")
+        print(f"    target_entropy       = {target_entropy:.4f}")
+        print(f"    target_state_changes = {target_state_changes}")
+        print(f"    target_gc_initial    = {target_gc_initial}")
     except Exception as e:
         print("Error extracting hairpin features:", e)
         return
