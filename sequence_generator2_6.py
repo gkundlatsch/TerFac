@@ -476,16 +476,6 @@ def generate_u_tract_by_distribution(entropia_u, u_state_change, u10, u6, a6, c_
     valid_comps = valid_entropy_comps.intersection(valid_state_comps)
     print(f"U-tract pre-filtering: {len(valid_comps)} valid compositions by entropy and state-change.")
     
-    print(f"    half_length = {half_length}")
-    print(f"    needed full‐hairpin entropy    = {target_entropy:.4f}")
-    print(f"    needed full‐stem state‐changes = {full_target_state_changes}")
-    print(f"    needed GC_initial (first‐half) = {target_gc_initial}")
-    
-    print(f"  → {len(valid_entropy_comps)} compositions pass the full‐hairpin entropy test")
-    print(f"  → {len(valid_state_comps)} compositions pass the first‐half state‐change range test")
-    print(f"  → {len(valid_gc_comps)} compositions pass the “enough G+C in first‐half” test")
-    print(f"  → Intersection size = {len(valid_comps)}")
-
     # --- Now, for each valid composition, generate candidate orderings ---
     for comp in valid_comps:
         ordering_list = []
@@ -707,7 +697,7 @@ def generate_hairpin_first_half(half_length, target_entropy, full_target_state_c
         full_length = half_length * 2
         if abs(compute_entropy(full_counts, full_length) - target_entropy) <= entropy_tol:
             valid_entropy_comps.add(comp)
-
+    
     # --- Pre-filter compositions by overall state-change capability ---
     valid_state_comps = {
         comp
@@ -727,7 +717,17 @@ def generate_hairpin_first_half(half_length, target_entropy, full_target_state_c
     # Intersect all three
     valid_comps = valid_entropy_comps & valid_state_comps & valid_gc_comps
     print(f"Pre-filtering: {len(valid_comps)} valid compositions after entropy, state-change & GC_initial checks.")
+
+    print(f"    half_length = {half_length}")
+    print(f"    needed full‐hairpin entropy    = {target_entropy:.4f}")
+    print(f"    needed full‐stem state‐changes = {full_target_state_changes}")
+    print(f"    needed GC_initial (first‐half) = {target_gc_initial}")
     
+    print(f"  → {len(valid_entropy_comps)} compositions pass the full‐hairpin entropy test")
+    print(f"  → {len(valid_state_comps)} compositions pass the first‐half state‐change range test")
+    print(f"  → {len(valid_gc_comps)} compositions pass the “enough G+C in first‐half” test")
+    print(f"  → Intersection size = {len(valid_comps)}")
+                                    
     candidate_count = 0
     for candidate in itertools.product(*allowed):
         candidate_count += 1
