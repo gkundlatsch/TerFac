@@ -54,6 +54,23 @@
       border-radius: 4px;
       background: #f9f9f9;
     }
+      .max-strength-box {
+      display: block;
+      text-align: center;
+      background-color: #e8f5e9;
+      border: 1px solid #4CAF50;
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+    .max-strength-box:hover {
+      background-color: #c8e6c9;
+      border-color: #388e3c;
+      color: #1b5e20;
+    }
   </style>
 </head>
 <body>
@@ -76,8 +93,13 @@
   
   <h1>TerFac - Terminator Factory</h1>
   <h2>Machine learning-driven generation of rho-independent terminators</h2>
-  
+
   <form method="post" action="/">
+    <a href="{{ url_for('show_max_strength') }}" class="max-strength-box">
+      Click here to see the terminator with maximum strength for every hairpin length
+    </a>
+  
+  
     <div class="form-group">
       <label for="target_strength">Target Strength:</label>
       <input
@@ -89,7 +111,7 @@
         placeholder="e.g., 40"
       >
     <div class="note">
-    Select a value between 1 and 300. All terminatores above 40 are considered strong.
+    All terminatores above 40 are considered strong. For the default hairpin length (24), the maximum strength is 250.
     </div>
     </div>
 
