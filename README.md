@@ -28,7 +28,7 @@ If you want to run TerFac locally, please check the offline repository: https://
 
 - **Web Interface**  
   Built with Flask; users specify a desired terminator strength and (optionally) advanced parameters. Results display optimized sequence, predicted strength, feature breakdown, and progress logs.
-
+```
 TerFac/
 ├── .gitattributes
 ├── .gitignore
@@ -50,5 +50,6 @@ TerFac/
 │   ├── max_strength.html
 │   └── status.html
 └── terminator_strength_predictor.joblib
+```
 
 If you have any questions or suggestions, you can find more information about our research group here: https://www2.fcfar.unesp.br/#!/instituicao/departamentos/bioprocessos-e-biotecnologia-novo/laboratorios/synbio/contact/
