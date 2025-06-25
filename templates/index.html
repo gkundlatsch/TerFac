@@ -218,30 +218,28 @@
     46: 297.10025, 48: 299.40262
   };
 
-  const hpInput = document.getElementById('max_hp');
+  const hpInput       = document.getElementById('max_hp');
   const strengthInput = document.getElementById('target_strength');
 
   function syncMax() {
-    const hp = parseInt(hpInput.value) || 24;
+    const hp     = parseInt(hpInput.value, 10) || 24;
     const maxVal = maxStrengths[hp] ?? maxStrengths[24];
     strengthInput.max = maxVal;
-    // HTML5 will now enforce <= maxVal
   }
 
-  // When the user changes hairpin length, update the max
-  hpInput.addEventListener('input', syncMax);
-  window.addEventListener('DOMContentLoaded', syncMax);
+  // fire whenever the number actually changes
+  hpInput.addEventListener('input',  syncMax);
+  hpInput.addEventListener('change', syncMax);
 
-  // Custom validity message when they exceed it
-  strengthInput.addEventListener('input', () => {
-    if (+strengthInput.value > +strengthInput.max) {
-      strengthInput.setCustomValidity(
-        `Max for this length is ${strengthInput.max}.`
-      );
-    } else {
-      strengthInput.setCustomValidity('');
-    }
-  });
+  // also re-sync when the advanced panel is shown
+  document.getElementById('toggle-advanced')
+    .addEventListener('click', () => {
+      // (you already toggle the panel here…)
+      syncMax();
+    });
+
+  // init on load
+  syncMax();
 </script>
 </body>
 </html>
