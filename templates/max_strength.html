@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TerFac – Max Strength Terminators</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+
+    /* New: scrollable wrapper */
+    .table-container {
+      max-height: 600px;      /* Adjust as needed */
+      overflow-y: auto;
+      border: 1px solid #ccc; /* Optional: frame around it */
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px 12px;
+      text-align: center;
+      white-space: nowrap;    /* Prevent line‐wrap inside cells */
+    }
+    th {
+      background-color: #f2f2f2;
+      position: sticky;       /* Keep header fixed when scrolling */
+      top: 0;
+      z-index: 2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .footer {
+      font-size: 0.85em;
+      margin-top: 40px;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>TerFac – Max Strength Terminators</h1>
+  <h2>Terminators with Maximum Strength by Hairpin Length</h2>
+
+  <!-- Wrap the table here -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>hairpin_length</th>
+          <th>max_strength</th>
+          <th>A-tract</th>
+          <th>Hairpin_1st</th>
+          <th>Loop</th>
+          <th>Hairpin_2nd</th>
+          <th>U-tract</th>
+          <th>Terminator</th>
+          <th>Loop Length</th>
+          <th>A%_6_A_tract</th>
+          <th>C%_6_A_tract</th>
+          <th>U%_10_U_tract</th>
+          <th>U%_6_U_tract</th>
+          <th>A%_6_U_tract</th>
+          <th>C%_U_tract</th>
+          <th>Hairpin Length</th>
+          <th>%GC_Loop</th>
+          <th>Shannon Entropy of A-tract</th>
+          <th>Shannon Entropy of U-tract</th>
+          <th>Shannon Entropy of Hairpin (w/o Loop)</th>
+          <th>State-Change in A-tract</th>
+          <th>State-Change in U-tract</th>
+          <th>State-Change in Hairpin (w/o Loop)</th>
+          <th>Initial GC Count in Hairpin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>6</td>
+          <td>262.25912</td>
+          <td>AAAAAAAA</td>
+          <td>CAC</td>
+          <td>GAAA</td>
+          <td>GUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACGAAAGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>6</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>5</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>264.99786</td>
+          <td>AAAAAAAA</td>
+          <td>CACA</td>
+          <td>GAAA</td>
+          <td>UGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACAGAAAUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>8</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>2.0</td>
+          <td>0</td>
+          <td>3</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>264.96326</td>
+          <td>AAAAAAAA</td>
+          <td>CAACA</td>
+          <td>GAAA</td>
+          <td>UGUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAACAGAAAUGUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>10</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.971</td>
+          <td>0</td>
+          <td>3</td>
+          <td>7</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>298.69916</td>
+          <td>AAAAAAAA</td>
+          <td>CACACG</td>
+          <td>GAAA</td>
+          <td>CGUGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACACGGAAACGUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>12</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>284.21555</td>
+          <td>AAAAAAAA</td>
+          <td>CAACACA</td>
+          <td>GAAA</td>
+          <td>UGUGUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAACACAGAAAUGUGUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>14</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9852</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>288.0678</td>
+          <td>AAAAAAAA</td>
+          <td>CAAACACA</td>
+          <td>GAAA</td>
+          <td>UGUGUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAACACAGAAAUGUGUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>16</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>2.0</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>286.5202</td>
+          <td>AAAAAAAA</td>
+          <td>CAAAACACA</td>
+          <td>GAAA</td>
+          <td>UGUGUUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAAACACAGAAAUGUGUUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>18</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>285.0101</td>
+          <td>AAAAAAAA</td>
+          <td>CAAAAACACG</td>
+          <td>GAAA</td>
+          <td>CGUGUUUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAAAACACGGAAACGUGUUUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>20</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>2.0</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>22</td>
+          <td>285.1636</td>
+          <td>AAAAAAAA</td>
+          <td>CAAAAAACACG</td>
+          <td>GAAA</td>
+          <td>CGUGUUUUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAAAAACACGGAAACGUGUUUUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>22</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.994</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>286.70944</td>
+          <td>AAAAAAAA</td>
+          <td>CAAAAAAACACG</td>
+          <td>GAAA</td>
+          <td>CGUGUUUUUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAAAAAACACGGAAACGUGUUUUUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>24</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>11</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>26</td>
+          <td>286.73306</td>
+          <td>AAAAAAAA</td>
+          <td>CACACACACGCGC</td>
+          <td>GAAA</td>
+          <td>GCGCGUGUGUGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACACACACGCGCGAAAGCGCGUGUGUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>26</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.8905</td>
+          <td>0</td>
+          <td>3</td>
+          <td>25</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>28</td>
+          <td>285.65656</td>
+          <td>AAAAAAAA</td>
+          <td>CACACACACACACA</td>
+          <td>GAAA</td>
+          <td>UGUGUGUGUGUGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACACACACACACAGAAAUGUGUGUGUGUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>28</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>2.0</td>
+          <td>0</td>
+          <td>3</td>
+          <td>27</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>288.547</td>
+          <td>AAAAAAAA</td>
+          <td>CACACACACACGCGC</td>
+          <td>GAAA</td>
+          <td>GCGCGUGUGUGUGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACACACACACGCGCGAAAGCGCGUGUGUGUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>30</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>29</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>32</td>
+          <td>289.14246</td>
+          <td>AAAAAAAA</td>
+          <td>CACACACACACGCGCG</td>
+          <td>GAAA</td>
+          <td>CGCGCGUGUGUGUGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACACACACACGCGCGGAAACGCGCGUGUGUGUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>32</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.896</td>
+          <td>0</td>
+          <td>3</td>
+          <td>31</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>34</td>
+          <td>288.1381</td>
+          <td>AAAAAAAA</td>
+          <td>CACACACACACACACAC</td>
+          <td>GAAA</td>
+          <td>GUGUGUGUGUGUGUGUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACACACACACACACACACGAAAGUGUGUGUGUGUGUGUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>34</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9975</td>
+          <td>0</td>
+          <td>3</td>
+          <td>33</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>36</td>
+          <td>290.95795</td>
+          <td>AAAAAAAA</td>
+          <td>CAACACACACACACAUAU</td>
+          <td>GAAA</td>
+          <td>AUAUGUGUGUGUGUGUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAACACACACACACAUAUGAAAAUAUGUGUGUGUGUGUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>36</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>38</td>
+          <td>291.38586</td>
+          <td>AAAAAAAA</td>
+          <td>CAAACACACACACACAUAU</td>
+          <td>GAAA</td>
+          <td>AUAUGUGUGUGUGUGUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAACACACACACACAUAUGAAAAUAUGUGUGUGUGUGUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>38</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.8997</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>40</td>
+          <td>290.00537</td>
+          <td>AAAAAAAA</td>
+          <td>CAAAACACACACACACACAU</td>
+          <td>GAAA</td>
+          <td>AUGUGUGUGUGUGUGUUUUG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACAAAACACACACACACACAUGAAAAUGUGUGUGUGUGUGUUUUGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>40</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9341</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>42</td>
+          <td>293.69907</td>
+          <td>AAAAAAAA</td>
+          <td>CCCCACCGCGCGCGCGCGCGC</td>
+          <td>GAAA</td>
+          <td>GCGCGCGCGCGCGCGGUGGGG</td>
+          <td>UUUUUUAGUUUU</td>
+          <td>AAAAAAAACCCCACCGCGCGCGCGCGCGCGAAAGCGCGCGCGCGCGCGGUGGGGUUUUUUAGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>0</td>
+          <td>42</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.2762</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>44</td>
+          <td>295.59784</td>
+          <td>AAAAAAAA</td>
+          <td>CCCCACCCGCGCGCGCGCGCGC</td>
+          <td>GAAA</td>
+          <td>GCGCGCGCGCGCGCGGGUGGGG</td>
+          <td>UUUUUUAGUUUU</td>
+          <td>AAAAAAAACCCCACCCGCGCGCGCGCGCGCGAAAGCGCGCGCGCGCGCGGGUGGGGUUUUUUAGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>0</td>
+          <td>44</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.2668</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>46</td>
+          <td>297.10025</td>
+          <td>AAAAAAAA</td>
+          <td>CCCCACCCCGCGCGCGCGCGCGC</td>
+          <td>GAAA</td>
+          <td>GCGCGCGCGCGCGCGGGGUGGGG</td>
+          <td>UUUUUUAGUUUU</td>
+          <td>AAAAAAAACCCCACCCCGCGCGCGCGCGCGCGAAAGCGCGCGCGCGCGCGGGGUGGGGUUUUUUAGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>0</td>
+          <td>46</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.258</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td>48</td>
+          <td>299.40262</td>
+          <td>AAAAAAAA</td>
+          <td>CCCCCCCCGACACACACACACACA</td>
+          <td>GAAA</td>
+          <td>UGUGUGUGUGUGUGUCGGGGGGGG</td>
+          <td>UUUUUUCGUUUU</td>
+          <td>AAAAAAAACCCCCCCCGACACACACACACACAGAAAUGUGUGUGUGUGUGUCGGGGGGGGUUUUUUCGUUUU</td>
+          <td>4</td>
+          <td>6</td>
+          <td>0</td>
+          <td>8</td>
+          <td>6</td>
+          <td>0</td>
+          <td>1</td>
+          <td>48</td>
+          <td>1</td>
+          <td>0</td>
+          <td>0.8166</td>
+          <td>1.9183</td>
+          <td>0</td>
+          <td>3</td>
+          <td>35</td>
+          <td>9</td>
+        </tr>
+      </tbody>
+    </table>
+  </div> <!-- /.table-container -->
+
+  <div class="footer">
+    <p>Developed by Guilherme E. Kundlatsch under supervision of Prof. Danielle B. Pedrolli, Prof. Elibio Leopoldo Rech Filho and Prof. Leonardo Tomazeli Duarte.</p>
+      <p>The data used to train this model was originally published by Chen et al. in Nature Methods: Chen, Y.J., Liu, P., Nielsen, A., et al. (2013). Characterization of 582 natural and synthetic terminators and quantification of their design constraints. Nature Methods, 10, 659–664.</p>
+      <p>This work was funded by the São Paulo State Foundation (FAPESP) grants 2023/02133-0 and 2020/09838-0, the National Council for Scientific and Technological Development (CNPq) grants 305324/2023-3 and 405953/2024-0, and the National Institute of Science and Technology – Synthetic Biology (CNPq/FAP-DF) grant 465603/2014-9.</p>
+  </div>
+</body>
+</html>
