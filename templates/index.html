@@ -109,9 +109,10 @@
         step="any"
         required
         placeholder="e.g., 40"
+        max="299.40262"
       >
     <div class="note">
-    All terminatores above 40 are considered strong. For the default hairpin length (24), the maximum strength is 250.
+    All terminatores above 40 are considered strong. For the default hairpin length (24), the maximum strength is 286.
     </div>
     </div>
 
@@ -129,6 +130,7 @@
           min="6"
           max="48"
           step="2"
+          value="24"
           placeholder="24"
         >
     <div class="note">
@@ -206,6 +208,41 @@
     document.getElementById('loading-overlay').style.display = 'block';
   });
   </script>
+  <script>
+  const maxStrengths = {
+    6: 262.25912, 8: 264.99786, 10: 264.96326, 12: 298.69916,
+    14: 284.21555, 16: 288.0678, 18: 286.5202, 20: 285.0101,
+    22: 285.1636, 24: 286.70944, 26: 286.73306, 28: 285.65656,
+    30: 288.547,   32: 289.14246, 34: 288.1381,  36: 290.95795,
+    38: 291.38586, 40: 290.00537, 42: 293.69907, 44: 295.59784,
+    46: 297.10025, 48: 299.40262
+  };
+
+  const hpInput = document.getElementById('max_hp');
+  const strengthInput = document.getElementById('target_strength');
+
+  function syncMax() {
+    const hp = parseInt(hpInput.value) || 24;
+    const maxVal = maxStrengths[hp] ?? maxStrengths[24];
+    strengthInput.max = maxVal;
+    // HTML5 will now enforce <= maxVal
+  }
+
+  // When the user changes hairpin length, update the max
+  hpInput.addEventListener('input', syncMax);
+  window.addEventListener('DOMContentLoaded', syncMax);
+
+  // Custom validity message when they exceed it
+  strengthInput.addEventListener('input', () => {
+    if (+strengthInput.value > +strengthInput.max) {
+      strengthInput.setCustomValidity(
+        `Max for this length is ${strengthInput.max}.`
+      );
+    } else {
+      strengthInput.setCustomValidity('');
+    }
+  });
+</script>
 </body>
 </html>
 
