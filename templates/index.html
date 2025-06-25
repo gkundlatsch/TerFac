@@ -238,8 +238,43 @@
       syncMax();
     });
 
-  // init on load
+  function validateHP() {
+  const val = parseInt(hpInput.value, 10);
+  if (
+    isNaN(val) ||
+    val < 6 ||
+    val > 48 ||
+    (val % 2) !== 0
+  ) {
+    hpInput.setCustomValidity(
+      'Please enter an even hairpin length between 6 and 48.'
+    );
+  } else {
+    hpInput.setCustomValidity('');
+  }
+}
+
+// Run on both typing and arrow/spin changes
+hpInput.addEventListener('input',  validateHP);
+hpInput.addEventListener('change', validateHP);
+
+  // Merge into one form-submit handler (so we only show the overlay if all is valid)
+  document.querySelector('form').addEventListener('submit', function(e) {
+    validateHP();               // 1) run your HP check
+    if (this.checkValidity()) {
+      // only show loading if the form is valid
+      document.getElementById('loading-overlay').style.display = 'block';
+    } else {
+      // prevent submission so browser can show the error
+      e.preventDefault();
+    }
+  });
+
+  // ─────── Insert these two bootstrap calls ───────
   syncMax();
+  validateHP();
+  // ────────────────────────────────────────────────
+
 </script>
 </body>
 </html>
