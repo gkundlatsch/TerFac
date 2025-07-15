@@ -42,7 +42,7 @@ here = os.path.dirname(__file__)
 print(f"[DEBUG] CWD:          {os.getcwd()}")
 print(f"[DEBUG] module folder: {here}")
 print(f"[DEBUG] files there:   {os.listdir(here)}")
-model_path = os.path.join(here, "terminator_strength_predictor.joblib")
+model_path = os.path.join(here, "terminator_strength_predictorv1.3.joblib")
 print(f"[DEBUG] loading from:  {model_path} (exists? {os.path.exists(model_path)})")
 model_data = joblib.load(model_path)
 model = model_data["model"]
