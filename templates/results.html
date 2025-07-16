@@ -116,6 +116,29 @@
     <!-- 3) Features -->
     <div class="card">
       <h2>Features</h2>
+
+    <div class="card">
+      <h2>Features</h2>
+
+    {% set feature_name_map = {
+      "Tamanho Loop": "Loop length",
+      "A%_6_A_tract": "A% (first 6 nt of A-tract)",
+      "C%_6_A_tract": "C% (first 6 nt of A-tract)",
+      "U%_10_U_tract": "U% (first 10 nt of U-tract)",
+      "U%_6_U_tract": "U% (first 6 nt of U-tract)",
+      "A%_6_U_tract": "A% (first 6 nt of U-tract)",
+      "C%_U_tract": "C% (entire U-tract)",
+      "Tamanho Hairpin sem Loop": "Hairpin length (no loop)",
+      "%GC_Loop": "GC% of loop",
+      "Entropia_A_tract": "Entropy (A-tract)",
+      "Entropia_U_tract": "Entropy (U-tract)",
+      "Entropia_HP_S_Loop": "Entropy (hairpin w/o loop)",
+      "A_Tract_state-change": "State changes (A-tract)",
+      "U_Tract_state-change": "State changes (U-tract)",
+      "HP_S_Loop_state-change": "State changes (hairpin w/o loop)",
+      "GC_Inicial_Hairpin": "Initial GC pairs in hairpin"
+    } %}
+   
       <table>
         <thead>
           <tr><th>Feature</th><th>Value</th></tr>
@@ -123,7 +146,7 @@
         <tbody>
           {% for name, value in features.items() %}
           <tr>
-            <td>{{ name }}</td>
+            <td>{{ feature_name_map.get(name, name) }}</td>
             <td>{{ value }}</td>
           </tr>
           {% endfor %}
